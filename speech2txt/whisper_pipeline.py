@@ -56,6 +56,18 @@ url = "https://www.youtube.com/watch?v=tdoLLBTZauE&ab_channel=Carnest"
 transcriptions = yt_transcribe(url)
 print(transcriptions["text"])
 
+#transcript from file
+import pytube as pt
+
+def f_transcribe(path: str):
+    text = pipe(
+        path,
+        generate_kwargs={"language": "<|th|>", "task": "transcribe"},
+        return_timestamps=False,
+        batch_size=16
+    )
+    return text
+
 # Function to detect highlighted words in the transcript
 def detect_highlighted_words(transcript, keywords):
     highlighted_words = []
@@ -66,11 +78,13 @@ def detect_highlighted_words(transcript, keywords):
 
 if __name__ == "__main__":
     audio_file = "path_to_your_audio_file.wav"
-    keywords = ["เบนซิน", "ดีเซล", "เก้าสิบห้า", "เก้าห้า", "แก๊สโซฮอล์", "แก๊ส", "เก้าหนึ่ง", "เก้าสิบเอ็ด", "เก้าเอ็ด", "เบนซีน"]
+    keywords = ["เบนซิน", "เบนซีน","เบน","เบ", "บ", "ซิน", "ซีน", "ดีเซล", "ดี", "เซล","ห้า","เก้า", "เก้าสิบห้า", "เก้าห้า", "แก๊สโซฮอล์", "แก๊ส", "เก้าหนึ่ง", "เก้าสิบเอ็ด", "เก้าเอ็ด"]
 
-    transcript = transcriptions
-    if transcript:
-        highlighted = detect_highlighted_words(transcript, keywords)
+    btest = '/content/cat2 (1).wav'
+    transcriptions = f_transcribe(btest)
+    print(transcriptions)
+    if transcriptions:
+        highlighted = detect_highlighted_words(transcriptions, keywords)
         if highlighted:
             print("Highlighted words found:")
             print(highlighted)
@@ -78,6 +92,8 @@ if __name__ == "__main__":
             print("No highlighted words found.")
     else:
         print("Transcription failed.")
+
+
 
 def cut_text_before_keywords(text, keywords):
     # Initialize variables to track the index of the first occurrence of any keyword
